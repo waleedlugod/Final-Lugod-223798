@@ -36,8 +36,9 @@ public class Bullet implements DrawingObject {
         g2d.setTransform(reset);
     }
 
-    public void setPosition(Vector2 position) {
-        this.position = position;
+    public void setPosition(int x, int y) {
+        position.x = x;
+        position.y = y;
     }
 
     public Vector2 getPosition() {
@@ -48,8 +49,9 @@ public class Bullet implements DrawingObject {
         return new Vector2(size.x, size.y);
     }
 
-    public void setVelocity(Vector2 velocity) {
-        this.velocity = velocity;
+    public void setVelocity(int x, int y) {
+        velocity.x = x;
+        velocity.y = y;
     }
 
     public Vector2 getVelocity() {

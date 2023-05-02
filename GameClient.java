@@ -66,7 +66,7 @@ public class GameClient {
             try {
                 int x = inputStream.readInt();
                 int y = inputStream.readInt();
-                gameCanvas.setOtherPlayerPosition(new Vector2(x, y));
+                gameCanvas.players[1].setPostion(x, y);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -74,14 +74,11 @@ public class GameClient {
 
         private void readOtherBulletsPositions() {
             try {
-                Vector2[] newBulletsPositions = new Vector2[Bullet.MAX_BULLETS];
                 for (int i = 0; i < Bullet.MAX_BULLETS; i++) {
                     int x = inputStream.readInt();
                     int y = inputStream.readInt();
-                    newBulletsPositions[i] = new Vector2(x, y);
+                    gameCanvas.bullets[1][i].setPosition(x, y);
                 }
-
-                gameCanvas.setOtherBulletsPositions(newBulletsPositions);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -89,11 +86,10 @@ public class GameClient {
 
         private void readOtherBulletsVelocities() {
             try {
-                Vector2[] newBulletsVelocities = new Vector2[Bullet.MAX_BULLETS];
                 for (int i = 0; i < Bullet.MAX_BULLETS; i++) {
                     int x = inputStream.readInt();
                     int y = inputStream.readInt();
-                    newBulletsVelocities[i] = new Vector2(x, y);
+                    gameCanvas.bullets[1][i].setVelocity(x, y);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -129,21 +125,19 @@ public class GameClient {
         }
 
         private void writeSelfPlayerPosition() {
-            Vector2 selfPlayerPosition = gameCanvas.getSelfPlayerPosition();
             try {
-                outputStream.writeInt(selfPlayerPosition.x);
-                outputStream.writeInt(selfPlayerPosition.y);
+                outputStream.writeInt(gameCanvas.players[0].getPosition().x);
+                outputStream.writeInt(gameCanvas.players[0].getPosition().y);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
         private void writeSelfBulletsPositions() {
-            Vector2[] selfBulletsPositions = gameCanvas.getSelfBulletsPositions();
             try {
-                for (Vector2 position : selfBulletsPositions) {
-                    outputStream.writeInt(position.x);
-                    outputStream.writeInt(position.y);
+                for (int i = 0; i < gameCanvas.bullets[1].length; i++) {
+                    outputStream.writeInt(gameCanvas.bullets[0][i].getPosition().x);
+                    outputStream.writeInt(gameCanvas.bullets[0][i].getPosition().y);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -151,11 +145,10 @@ public class GameClient {
         }
 
         private void writeSelfBulletsVelocities() {
-            Vector2[] selfBulletsVelocities = gameCanvas.getSelfBulletsVelocities();
             try {
-                for (Vector2 velocity : selfBulletsVelocities) {
-                    outputStream.writeInt(velocity.x);
-                    outputStream.writeInt(velocity.y);
+                for (int i = 0; i < gameCanvas.bullets[1].length; i++) {
+                    outputStream.writeInt(gameCanvas.bullets[0][i].getVelocity().x);
+                    outputStream.writeInt(gameCanvas.bullets[0][i].getVelocity().y);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

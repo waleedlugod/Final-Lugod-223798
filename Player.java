@@ -31,8 +31,9 @@ public class Player implements DrawingObject {
         return new Vector2(position.x, position.y);
     }
 
-    public void setPostion(Vector2 position) {
-        this.position = position;
+    public void setPostion(int x, int y) {
+        position.x = x;
+        position.y = y;
     }
 
     public Vector2 getSize() {

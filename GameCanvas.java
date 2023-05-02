@@ -5,9 +5,8 @@ import java.util.*;
 public class GameCanvas extends JComponent {
     private final int ID;
     private ArrayList<DrawingObject> objectsToDraw = new ArrayList<DrawingObject>();
-    private Bullet[][] bullets = new Bullet[2][Bullet.MAX_BULLETS];
-    private Player selfPlayer;
-    private Player otherPlayer;
+    public Bullet[][] bullets = new Bullet[2][Bullet.MAX_BULLETS];
+    public Player[] players = new Player[2];
 
     public GameCanvas(int ID) {
         this.ID = ID;
@@ -16,42 +15,6 @@ public class GameCanvas extends JComponent {
 
         addPlayers();
         addBullets();
-    }
-
-    public Vector2 getSelfPlayerPosition() {
-        return selfPlayer.getPosition();
-    }
-
-    public void setOtherPlayerPosition(Vector2 position) {
-        otherPlayer.setPostion(position);
-    }
-
-    public Vector2[] getSelfBulletsPositions() {
-        Vector2[] selfBulletsPositions = new Vector2[Bullet.MAX_BULLETS];
-        for (int i = 0; i < bullets[0].length; i++) {
-            selfBulletsPositions[i] = bullets[0][i].getPosition();
-        }
-        return selfBulletsPositions;
-    }
-
-    public void setOtherBulletsPositions(Vector2[] otherBulletsPositions) {
-        for (int i = 0; i < Bullet.MAX_BULLETS; i++) {
-            bullets[1][i].setPosition(otherBulletsPositions[i]);
-        }
-    }
-
-    public Vector2[] getSelfBulletsVelocities() {
-        Vector2[] selfBulletsVelocities = new Vector2[Bullet.MAX_BULLETS];
-        for (int i = 0; i < bullets[0].length; i++) {
-            selfBulletsVelocities[i] = bullets[0][i].getVelocity();
-        }
-        return selfBulletsVelocities;
-    }
-
-    public void setSelfBulletsVelocities(Vector2[] otherBulletsVelocities) {
-        for (int i = 0; i < Bullet.MAX_BULLETS; i++) {
-            bullets[1][i].setVelocity(otherBulletsVelocities[i]);
-        }
     }
 
     @Override
@@ -66,16 +29,16 @@ public class GameCanvas extends JComponent {
     }
 
     private void addPlayers() {
-        selfPlayer = new Player(100, 100, true, new Color(ID == 0 ? 0xff0000 : 0x0000ff));
-        otherPlayer = new Player(200, 100, false, new Color(ID == 1 ? 0xff0000 : 0x0000ff));
-        objectsToDraw.add(selfPlayer);
-        objectsToDraw.add(otherPlayer);
+        players[0] = new Player(100, 100, true, new Color(ID == 0 ? 0xff0000 : 0x0000ff));
+        players[1] = new Player(200, 100, false, new Color(ID == 1 ? 0xff0000 : 0x0000ff));
+        objectsToDraw.add(players[0]);
+        objectsToDraw.add(players[1]);
     }
 
     private void addBullets() {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < bullets[i].length; j++) {
-                bullets[i][j] = new Bullet(i == 0 ? selfPlayer : otherPlayer, j, new Color(0x00ff00));
+                bullets[i][j] = new Bullet(i == 0 ? players[0] : players[1], j, new Color(0x00ff00));
                 objectsToDraw.add(bullets[i][j]);
             }
         }
