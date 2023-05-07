@@ -3,10 +3,12 @@ import javax.swing.*;
 import java.util.*;
 
 public class GameCanvas extends JComponent {
-    private final int ID;
-    private ArrayList<DrawingObject> objectsToDraw = new ArrayList<DrawingObject>();
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 600;
     public Bullet[][] bullets = new Bullet[2][Bullet.MAX_BULLETS];
     public Player[] players = new Player[2];
+    private final int ID;
+    private ArrayList<DrawingObject> objectsToDraw = new ArrayList<DrawingObject>();
 
     public GameCanvas(int ID) {
         this.ID = ID;
