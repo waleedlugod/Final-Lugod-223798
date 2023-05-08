@@ -2,7 +2,7 @@ import java.net.*;
 import java.io.*;
 
 public class GameClient {
-    private int ID = -1;
+    private int CLIENT_ID = -1;
     private Socket clientSocket;
     private final GameCanvas gameCanvas;
     private final GameCanvas gameCanvas2;
@@ -13,13 +13,13 @@ public class GameClient {
         System.out.println("-----CLIENT-----");
         connectToServer();
 
-        GameFrame gameFrame = new GameFrame(ID);
+        GameFrame gameFrame = new GameFrame(CLIENT_ID, 0);
         gameFrame.setupGUI();
         gameCanvas = gameFrame.getGameCanvas();
 
-        GameFrame gameFrame2 = new GameFrame(ID);
+        GameFrame gameFrame2 = new GameFrame(CLIENT_ID, 1);
         gameFrame2.setupGUI();
-        gameFrame2.setTitle("Player " + (int) (ID + 1) + " 2");
+        gameFrame2.setTitle("Player " + (int) (CLIENT_ID + 1) + " 2");
         gameCanvas2 = gameFrame2.getGameCanvas();
 
         setupReadWriteThreads(inputStream, outputStream);
@@ -34,7 +34,7 @@ public class GameClient {
             inputStream = new DataInputStream(clientSocket.getInputStream());
             outputStream = new DataOutputStream(clientSocket.getOutputStream());
 
-            ID = inputStream.readInt();
+            CLIENT_ID = inputStream.readInt();
 
             System.out.println("Successfully connected to server.");
         } catch (IOException e) {

@@ -5,15 +5,17 @@ import java.util.ArrayList;
 public class GameFrame extends JFrame {
     public static final ArrayList<String> pressedKeys = new ArrayList<>();
     private GameCanvas gameCanvas;
-    private int ID;
+    private final int CLIENT_ID;
+    private final int FRAME_ID;
 
-    public GameFrame(int ID) {
-        this.ID = ID;
+    public GameFrame(int CLIENT_ID, int FRAME_ID) {
+        this.CLIENT_ID = CLIENT_ID;
+        this.FRAME_ID = FRAME_ID;
 
         JPanel keyBindingsPane = (JPanel) getContentPane();
         keyBindingsPane.setFocusable(true);
         addKeyListeners(keyBindingsPane);
-        gameCanvas = new GameCanvas(ID);
+        gameCanvas = new GameCanvas(CLIENT_ID, FRAME_ID);
     }
 
     public void setupGUI() {
@@ -24,7 +26,7 @@ public class GameFrame extends JFrame {
         });
         timer.start();
         add(gameCanvas);
-        setTitle("Player " + (int) (ID + 1));
+        setTitle("Player " + (int) (CLIENT_ID + 1));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         pack();

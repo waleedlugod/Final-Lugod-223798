@@ -7,11 +7,13 @@ public class GameCanvas extends JComponent {
     public static final int HEIGHT = 300;
     public Bullet[][] bullets = new Bullet[2][Bullet.MAX_BULLETS];
     public Player[] players = new Player[2];
-    private final int ID;
+    private final int CLIENT_ID;
+    private final int FRAME_ID;
     private ArrayList<DrawingObject> objectsToDraw = new ArrayList<DrawingObject>();
 
-    public GameCanvas(int ID) {
-        this.ID = ID;
+    public GameCanvas(int CLIENT_ID, int FRAME_ID) {
+        this.CLIENT_ID = CLIENT_ID;
+        this.FRAME_ID = FRAME_ID;
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
@@ -31,10 +33,9 @@ public class GameCanvas extends JComponent {
     }
 
     private void addPlayers() {
-        players[0] = new Player(ID == 0 ? 0 : 100, 0, new Color(ID == 0 ? 0xff0000 : 0x0000ff), 0);
-        players[1] = new Player(ID == 0 ? 100 : 0, 0, new Color(ID == 0 ? 0x0000ff : 0xff0000), 1);
-        objectsToDraw.add(players[0]);
-        objectsToDraw.add(players[1]);
+        players[0] = new Player(CLIENT_ID == 0 ? 0 : 100, 0, new Color(CLIENT_ID == 0 ? 0xff0000 : 0x0000ff), 0);
+        players[1] = new Player(CLIENT_ID == 0 ? 100 : 0, 0, new Color(CLIENT_ID == 0 ? 0x0000ff : 0xff0000), 1);
+        objectsToDraw.add(players[FRAME_ID]);
     }
 
     private void addBullets() {
