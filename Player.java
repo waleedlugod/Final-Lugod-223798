@@ -20,6 +20,7 @@ public class Player implements DrawingObject {
 
     @Override
     public void draw(Graphics2D g2d) {
+        animate();
         AffineTransform reset = g2d.getTransform();
         g2d.translate(position.x, position.y);
         g2d.setColor(color);
@@ -35,5 +36,30 @@ public class Player implements DrawingObject {
     public void setPostion(int x, int y) {
         position.x = x;
         position.y = y;
+    }
+
+    private void animate() {
+        if (ID == 0) {
+            Vector2 newPosition = new Vector2(position.x, position.y);
+            for (String pressedKey : GameFrame.pressedKeys) {
+                switch (pressedKey) {
+                    case "A":
+                        newPosition.x -= SPEED;
+                        break;
+                    case "D":
+                        newPosition.x += SPEED;
+                        break;
+                    case "W":
+                        newPosition.y -= SPEED;
+                        break;
+                    case "S":
+                        newPosition.y += SPEED;
+                        break;
+                }
+            }
+            if (!Collision.isCollidingWithWall(newPosition, SIZE)) {
+                position = newPosition;
+            }
+        }
     }
 }

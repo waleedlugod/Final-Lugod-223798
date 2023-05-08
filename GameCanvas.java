@@ -25,8 +25,6 @@ public class GameCanvas extends JComponent {
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHints(rh);
 
-        movePlayer();
-
         for (DrawingObject object : objectsToDraw) {
             object.draw(g2d);
         }
@@ -45,31 +43,6 @@ public class GameCanvas extends JComponent {
                 bullets[i][j] = new Bullet(i == 0 ? players[0] : players[1], j, new Color(0x00ff00));
                 objectsToDraw.add(bullets[i][j]);
             }
-        }
-    }
-
-    public void movePlayer() {
-        Vector2 playerPosition = players[0].getPosition();
-        Vector2 newPosition = new Vector2(playerPosition.x, playerPosition.y);
-        for (String pressedKey : GameFrame.pressedKeys) {
-            switch (pressedKey) {
-                case "A":
-                    newPosition.x -= Player.SPEED;
-                    break;
-                case "D":
-                    newPosition.x += Player.SPEED;
-                    break;
-                case "W":
-                    newPosition.y -= Player.SPEED;
-                    break;
-                case "S":
-                    newPosition.y += Player.SPEED;
-                    break;
-            }
-        }
-        if (!Collision.isCollidingWithWall(newPosition, Player.SIZE) &&
-                !Collision.isColliding(newPosition, Player.SIZE, players[1].getPosition(), Player.SIZE)) {
-            players[0].setPostion(newPosition.x, newPosition.y);
         }
     }
 }

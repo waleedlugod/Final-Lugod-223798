@@ -58,7 +58,6 @@ public class GameClient {
             while (true) {
                 readOtherPlayerPosition();
                 readOtherBulletsPositions();
-                readOtherBulletsVelocities();
             }
         }
 
@@ -83,18 +82,6 @@ public class GameClient {
                 e.printStackTrace();
             }
         }
-
-        private void readOtherBulletsVelocities() {
-            try {
-                for (int i = 0; i < Bullet.MAX_BULLETS; i++) {
-                    int x = inputStream.readInt();
-                    int y = inputStream.readInt();
-                    gameCanvas.bullets[1][i].setVelocity(x, y);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private class WriteToServer implements Runnable {
@@ -110,7 +97,6 @@ public class GameClient {
                 try {
                     writeSelfPlayerPosition();
                     writeSelfBulletsPositions();
-                    writeSelfBulletsVelocities();
 
                     outputStream.flush();
                     try {
@@ -138,17 +124,6 @@ public class GameClient {
                 for (int i = 0; i < gameCanvas.bullets[1].length; i++) {
                     outputStream.writeInt(gameCanvas.bullets[0][i].getPosition().x);
                     outputStream.writeInt(gameCanvas.bullets[0][i].getPosition().y);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        private void writeSelfBulletsVelocities() {
-            try {
-                for (int i = 0; i < gameCanvas.bullets[1].length; i++) {
-                    outputStream.writeInt(gameCanvas.bullets[0][i].getVelocity().x);
-                    outputStream.writeInt(gameCanvas.bullets[0][i].getVelocity().y);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

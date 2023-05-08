@@ -4,13 +4,13 @@ import java.time.*;
 
 public class Bullet implements DrawingObject {
     public static final int MAX_BULLETS = 4;
+    public static final Vector2 SIZE = new Vector2(10, 10);
     private static int shootableIdx = 0;
     private static long shootBufferPrevTime = 0;
     private final int SPEED = 1;
     private final int BULLET_IDX;
     private Vector2 position = new Vector2();
     private Vector2 velocity = new Vector2();
-    private Vector2 size = new Vector2(10, 10);
     private long directionBufferPrevTime = 0;
     private Ellipse2D.Double bullet;
     private Player owner;
@@ -19,7 +19,7 @@ public class Bullet implements DrawingObject {
 
     public Bullet(Player owner, int BULLET_IDX, Color COLOR) {
         // TODO: Change sprite
-        bullet = new Ellipse2D.Double(0, 0, size.x, size.y);
+        bullet = new Ellipse2D.Double(0, 0, SIZE.x, SIZE.y);
         this.BULLET_IDX = BULLET_IDX;
         this.owner = owner;
         this.color = COLOR;
@@ -60,6 +60,9 @@ public class Bullet implements DrawingObject {
                 clock.millis() - shootBufferPrevTime > 500) {
             shoot();
         }
+        if (Collision.isCollidingWithWall(position, SIZE)) {
+            velocity = new Vector2();
+        }
         position.x += velocity.x;
         position.y += velocity.y;
     }
@@ -98,7 +101,7 @@ public class Bullet implements DrawingObject {
 
     private void centerOnPlayer() {
         position = owner.getPosition();
-        position.x += Player.SIZE.x / 2 - size.x;
-        position.y += Player.SIZE.y / 2 - size.y;
+        position.x += Player.SIZE.x / 2 - SIZE.x;
+        position.y += Player.SIZE.y / 2 - SIZE.y;
     }
 }

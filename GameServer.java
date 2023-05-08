@@ -88,7 +88,6 @@ public class GameServer {
             while (true) {
                 readOtherPlayerPosition();
                 readOtherBulletsPositions();
-                readOtherBulletsVelocities();
             }
         }
 
@@ -113,18 +112,6 @@ public class GameServer {
                 e.printStackTrace();
             }
         }
-
-        private void readOtherBulletsVelocities() {
-            try {
-                for (int i = 0; i < Bullet.MAX_BULLETS; i++) {
-                    int x = inputStream.readInt();
-                    int y = inputStream.readInt();
-                    bullets[ID][i].setVelocity(x, y);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private class WriteToClient implements Runnable {
@@ -144,7 +131,6 @@ public class GameServer {
                 try {
                     writeOtherPlayerPosition();
                     writeOtherBulletsPositions();
-                    writeOtherBulletsVelocities();
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -169,18 +155,6 @@ public class GameServer {
                     Vector2 otherBulletPosition = bullets[OTHER_ID][i].getPosition();
                     outputStream.writeInt(otherBulletPosition.x);
                     outputStream.writeInt(otherBulletPosition.y);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        private void writeOtherBulletsVelocities() {
-            try {
-                for (int i = 0; i < Bullet.MAX_BULLETS; i++) {
-                    Vector2 otherBulletVelocity = bullets[OTHER_ID][i].getVelocity();
-                    outputStream.writeInt(otherBulletVelocity.x);
-                    outputStream.writeInt(otherBulletVelocity.y);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
