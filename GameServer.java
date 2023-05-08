@@ -108,11 +108,7 @@ public class GameServer {
 
         private void readOtherHealth() {
             try {
-                int newHealth = inputStream.readInt();
-                if (newHealth != players[OTHER_ID].health) {
-                    System.out.println("hit!");
-                }
-                players[OTHER_ID].health = newHealth;
+                players[OTHER_ID].health = inputStream.readInt();
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -21,7 +21,7 @@ public class Player implements DrawingObject {
 
     @Override
     public void draw(Graphics2D g2d) {
-        if (health < 0) {
+        if (health <= 0) {
             color = new Color(0xff00ff);
         }
         animate();
@@ -44,7 +44,6 @@ public class Player implements DrawingObject {
 
     public void hit() {
         health--;
-        System.out.println(health);
     }
 
     private void animate() {

@@ -10,6 +10,7 @@ public class GameCanvas extends JComponent {
     private final int CLIENT_ID;
     private final int FRAME_ID;
     private ArrayList<DrawingObject> objectsToDraw = new ArrayList<DrawingObject>();
+    private PlayerStats playerStats;
 
     public GameCanvas(int CLIENT_ID, int FRAME_ID) {
         this.CLIENT_ID = CLIENT_ID;
@@ -19,6 +20,7 @@ public class GameCanvas extends JComponent {
 
         addPlayers();
         addBullets();
+        playerStats = new PlayerStats(players);
     }
 
     @Override
@@ -30,6 +32,7 @@ public class GameCanvas extends JComponent {
         for (DrawingObject object : objectsToDraw) {
             object.draw(g2d);
         }
+        playerStats.draw(g2d);
     }
 
     private void addPlayers() {
