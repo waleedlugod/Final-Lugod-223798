@@ -45,10 +45,6 @@ public class Bullet implements DrawingObject {
         return new Vector2(position.x, position.y);
     }
 
-    public Vector2 getSize() {
-        return new Vector2(size.x, size.y);
-    }
-
     public void setVelocity(int x, int y) {
         velocity.x = x;
         velocity.y = y;
@@ -102,7 +98,7 @@ public class Bullet implements DrawingObject {
 
     private void centerOnPlayer() {
         position = owner.getPosition();
-        position.x += owner.getSize().x / 2 - size.x;
-        position.y += owner.getSize().y / 2 - size.y;
+        position.x += Player.SIZE.x / 2 - size.x;
+        position.y += Player.SIZE.y / 2 - size.y;
     }
 }

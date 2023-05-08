@@ -25,14 +25,16 @@ public class GameCanvas extends JComponent {
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHints(rh);
 
+        movePlayer();
+
         for (DrawingObject object : objectsToDraw) {
             object.draw(g2d);
         }
     }
 
     private void addPlayers() {
-        players[0] = new Player(100, 100, new Color(ID == 0 ? 0xff0000 : 0x0000ff), 0);
-        players[1] = new Player(200, 100, new Color(ID == 1 ? 0xff0000 : 0x0000ff), 1);
+        players[0] = new Player(ID == 0 ? 0 : 100, 0, new Color(ID == 0 ? 0xff0000 : 0x0000ff), 0);
+        players[1] = new Player(ID == 0 ? 100 : 0, 0, new Color(ID == 0 ? 0x0000ff : 0xff0000), 1);
         objectsToDraw.add(players[0]);
         objectsToDraw.add(players[1]);
     }
@@ -43,6 +45,31 @@ public class GameCanvas extends JComponent {
                 bullets[i][j] = new Bullet(i == 0 ? players[0] : players[1], j, new Color(0x00ff00));
                 objectsToDraw.add(bullets[i][j]);
             }
+        }
+    }
+
+    public void movePlayer() {
+        Vector2 playerPosition = players[0].getPosition();
+        Vector2 newPosition = new Vector2(playerPosition.x, playerPosition.y);
+        for (String pressedKey : GameFrame.pressedKeys) {
+            switch (pressedKey) {
+                case "A":
+                    newPosition.x -= Player.SPEED;
+                    break;
+                case "D":
+                    newPosition.x += Player.SPEED;
+                    break;
+                case "W":
+                    newPosition.y -= Player.SPEED;
+                    break;
+                case "S":
+                    newPosition.y += Player.SPEED;
+                    break;
+            }
+        }
+        if (!Collision.isCollidingWithWall(newPosition, Player.SIZE) &&
+                !Collision.isColliding(newPosition, Player.SIZE, players[1].getPosition(), Player.SIZE)) {
+            players[0].setPostion(newPosition.x, newPosition.y);
         }
     }
 }
