@@ -8,13 +8,15 @@ public class GameServer {
     private Bullet[][] bullets = new Bullet[2][Bullet.MAX_BULLETS];
     private ServerSocket serverSocket;
     private Socket[] clientSockets = new Socket[2];
-    private ArrayList<Thread> readWriteThreads = new ArrayList<>();
+    private ArrayList<Thread> threads = new ArrayList<>();
+    private Collision collision = new Collision();
 
     public GameServer() {
         System.out.println("-----SERVER-----");
         createServer();
         acceptConnections();
-        startReadWriteThreads();
+
+        startThreads();
     }
 
     private void createServer() {
@@ -59,15 +61,15 @@ public class GameServer {
     private void setupReadWriteThreads(DataInputStream inputStream, DataOutputStream outputStream, int ID) {
         ReadFromClient readFromClient = new ReadFromClient(inputStream, ID);
         Thread readThread = new Thread(readFromClient);
-        readWriteThreads.add(readThread);
+        threads.add(readThread);
 
         WriteToClient writeToClient = new WriteToClient(outputStream, ID);
         Thread writeThread = new Thread(writeToClient);
-        readWriteThreads.add(writeThread);
+        threads.add(writeThread);
     }
 
-    private void startReadWriteThreads() {
-        for (Thread thread : readWriteThreads) {
+    private void startThreads() {
+        for (Thread thread : threads) {
             thread.start();
         }
     }

@@ -37,26 +37,30 @@ public class Player implements DrawingObject {
     }
 
     public Vector2 getSize() {
-        return size;
+        return new Vector2(size.x, size.y);
     }
 
     private void animate() {
         if (ID == 0) {
+            Vector2 newPosition = new Vector2(position.x, position.y);
             for (String pressedKey : GameFrame.pressedKeys) {
                 switch (pressedKey) {
                     case "A":
-                        position.x -= SPEED;
+                        newPosition.x -= SPEED;
                         break;
                     case "D":
-                        position.x += SPEED;
+                        newPosition.x += SPEED;
                         break;
                     case "W":
-                        position.y -= SPEED;
+                        newPosition.y -= SPEED;
                         break;
                     case "S":
-                        position.y += SPEED;
+                        newPosition.y += SPEED;
                         break;
                 }
+            }
+            if (!Collision.isCollidingWithWall(newPosition, size)) {
+                position = newPosition;
             }
         }
     }
