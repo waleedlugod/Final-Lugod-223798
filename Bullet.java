@@ -65,12 +65,16 @@ public class Bullet implements DrawingObject {
         position.x += velocity.x;
         position.y += velocity.y;
         if (Collision.isCollidingWithWall(position, SIZE)) {
-            velocity = new Vector2();
+            reset();
         } else if (Collision.isColliding(position, SIZE, otherPlayer.getPosition(), Player.SIZE)) {
-            velocity = new Vector2();
-            position = new Vector2(-100, -100);
+            reset();
             otherPlayer.hit();
         }
+    }
+
+    private void reset() {
+        velocity = new Vector2();
+        position = new Vector2(-100, -100);
     }
 
     private void shoot() {
