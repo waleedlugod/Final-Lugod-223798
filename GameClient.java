@@ -5,6 +5,7 @@ public class GameClient {
     private int ID = -1;
     private Socket clientSocket;
     private final GameCanvas gameCanvas;
+    private final GameCanvas gameCanvas2;
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
 
@@ -15,6 +16,11 @@ public class GameClient {
         GameFrame gameFrame = new GameFrame(ID);
         gameFrame.setupGUI();
         gameCanvas = gameFrame.getGameCanvas();
+
+        GameFrame gameFrame2 = new GameFrame(ID);
+        gameFrame2.setupGUI();
+        gameFrame2.setTitle("Player " + (int) (ID + 1) + " 2");
+        gameCanvas2 = gameFrame2.getGameCanvas();
 
         setupReadWriteThreads(inputStream, outputStream);
     }
@@ -58,6 +64,7 @@ public class GameClient {
                 int x = inputStream.readInt();
                 int y = inputStream.readInt();
                 gameCanvas.players[1].setPostion(x, y);
+                gameCanvas2.players[1].setPostion(x, y);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -69,6 +76,7 @@ public class GameClient {
                     int x = inputStream.readInt();
                     int y = inputStream.readInt();
                     gameCanvas.bullets[1][i].setPosition(x, y);
+                    gameCanvas2.bullets[1][i].setPosition(x, y);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -77,7 +85,9 @@ public class GameClient {
 
         private void readSelfHealth() {
             try {
-                gameCanvas.players[0].health = inputStream.readInt();
+                int health = inputStream.readInt();
+                gameCanvas.players[0].health = health;
+                gameCanvas2.players[0].health = health;
             } catch (IOException e) {
                 e.printStackTrace();
             }

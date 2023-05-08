@@ -14,16 +14,15 @@ public class GameFrame extends JFrame {
         keyBindingsPane.setFocusable(true);
         addKeyListeners(keyBindingsPane);
         gameCanvas = new GameCanvas(ID);
+    }
 
+    public void setupGUI() {
         Timer timer = new Timer(0, new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 gameCanvas.repaint();
             }
         });
         timer.start();
-    }
-
-    public void setupGUI() {
         add(gameCanvas);
         setTitle("Player " + (int) (ID + 1));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,6 +32,10 @@ public class GameFrame extends JFrame {
 
     public GameCanvas getGameCanvas() {
         return gameCanvas;
+    }
+
+    public void setGameCanvas(GameCanvas gameCanvas) {
+        this.gameCanvas = gameCanvas;
     }
 
     private void addKeyListeners(JPanel contentPane) {

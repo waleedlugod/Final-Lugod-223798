@@ -3,8 +3,8 @@ import javax.swing.*;
 import java.util.*;
 
 public class GameCanvas extends JComponent {
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 600;
+    public static final int WIDTH = 300;
+    public static final int HEIGHT = 300;
     public Bullet[][] bullets = new Bullet[2][Bullet.MAX_BULLETS];
     public Player[] players = new Player[2];
     private final int ID;
@@ -13,7 +13,7 @@ public class GameCanvas extends JComponent {
     public GameCanvas(int ID) {
         this.ID = ID;
 
-        setPreferredSize(new Dimension(800, 600));
+        setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
         addPlayers();
         addBullets();
