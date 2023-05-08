@@ -5,6 +5,7 @@ public class Player implements DrawingObject {
     public static final int SPEED = 1;
     public static final Vector2 SIZE = new Vector2(25, 50);
     public final int ID;
+    public int health = 5;
     private Vector2 position = new Vector2();
     private Color color;
     private final Rectangle2D.Double player;
@@ -20,6 +21,9 @@ public class Player implements DrawingObject {
 
     @Override
     public void draw(Graphics2D g2d) {
+        if (health < 0) {
+            color = new Color(0xff00ff);
+        }
         animate();
         AffineTransform reset = g2d.getTransform();
         g2d.translate(position.x, position.y);
@@ -36,6 +40,11 @@ public class Player implements DrawingObject {
     public void setPostion(int x, int y) {
         position.x = x;
         position.y = y;
+    }
+
+    public void hit() {
+        health--;
+        System.out.println(health);
     }
 
     private void animate() {

@@ -9,7 +9,6 @@ public class GameServer {
     private ServerSocket serverSocket;
     private Socket[] clientSockets = new Socket[2];
     private ArrayList<Thread> threads = new ArrayList<>();
-    private Collision collision = new Collision();
 
     public GameServer() {
         System.out.println("-----SERVER-----");
@@ -43,7 +42,7 @@ public class GameServer {
                 int ID = playerCount;
                 players[playerCount] = new Player(0, 0, new Color(ID == 0 ? 0xff0000 : 0x0000ff), ID);
                 for (int i = 0; i < Bullet.MAX_BULLETS; i++) {
-                    bullets[playerCount][i] = new Bullet(players[playerCount], i, new Color(0x00ff00));
+                    bullets[playerCount][i] = new Bullet(players[playerCount], null, i, new Color(0x00ff00));
                 }
                 outputStream.writeInt(ID);
 
@@ -76,22 +75,16 @@ public class GameServer {
 
     private class ReadFromClient implements Runnable {
         private final int ID;
+        private final int OTHER_ID;
         private DataInputStream inputStream;
 
         public ReadFromClient(DataInputStream inputStream, int ID) {
             this.inputStream = inputStream;
             this.ID = ID;
+            OTHER_ID = ID == 0 ? 1 : 0;
         }
 
-        @Override
-        public void run() {
-            while (true) {
-                readOtherPlayerPosition();
-                readOtherBulletsPositions();
-            }
-        }
-
-        private void readOtherPlayerPosition() {
+        private void readSelfPlayerPosition() {
             try {
                 int x = inputStream.readInt();
                 int y = inputStream.readInt();
@@ -101,7 +94,7 @@ public class GameServer {
             }
         }
 
-        private void readOtherBulletsPositions() {
+        private void readSelfBulletsPositions() {
             try {
                 for (int i = 0; i < Bullet.MAX_BULLETS; i++) {
                     int x = inputStream.readInt();
@@ -110,6 +103,27 @@ public class GameServer {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+
+        private void readOtherHealth() {
+            try {
+                int newHealth = inputStream.readInt();
+                if (newHealth != players[OTHER_ID].health) {
+                    System.out.println("hit!");
+                }
+                players[OTHER_ID].health = newHealth;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                readSelfPlayerPosition();
+                readSelfBulletsPositions();
+                readOtherHealth();
             }
         }
     }
@@ -123,19 +137,6 @@ public class GameServer {
             this.outputStream = outputStream;
             this.ID = ID;
             OTHER_ID = ID == 0 ? 1 : 0;
-        }
-
-        @Override
-        public void run() {
-            while (true) {
-                try {
-                    writeOtherPlayerPosition();
-                    writeOtherBulletsPositions();
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
         }
 
         private void writeOtherPlayerPosition() {
@@ -158,6 +159,29 @@ public class GameServer {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+
+        private void writeSelfHealth() {
+            try {
+                outputStream.writeInt(players[ID].health);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    writeOtherPlayerPosition();
+                    writeOtherBulletsPositions();
+                    writeSelfHealth();
+
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

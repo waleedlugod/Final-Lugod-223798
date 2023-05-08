@@ -53,14 +53,6 @@ public class GameClient {
             this.inputStream = inputStream;
         }
 
-        @Override
-        public void run() {
-            while (true) {
-                readOtherPlayerPosition();
-                readOtherBulletsPositions();
-            }
-        }
-
         private void readOtherPlayerPosition() {
             try {
                 int x = inputStream.readInt();
@@ -82,6 +74,23 @@ public class GameClient {
                 e.printStackTrace();
             }
         }
+
+        private void readSelfHealth() {
+            try {
+                gameCanvas.players[0].health = inputStream.readInt();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                readOtherPlayerPosition();
+                readOtherBulletsPositions();
+                readSelfHealth();
+            }
+        }
     }
 
     private class WriteToServer implements Runnable {
@@ -89,25 +98,6 @@ public class GameClient {
 
         public WriteToServer(DataOutputStream outputStream) {
             this.outputStream = outputStream;
-        }
-
-        @Override
-        public void run() {
-            while (true) {
-                try {
-                    writeSelfPlayerPosition();
-                    writeSelfBulletsPositions();
-
-                    outputStream.flush();
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
 
         private void writeSelfPlayerPosition() {
@@ -127,6 +117,34 @@ public class GameClient {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+
+        private void writeOtherHealth() {
+            try {
+                outputStream.writeInt(gameCanvas.players[1].health);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    writeSelfPlayerPosition();
+                    writeSelfBulletsPositions();
+                    writeOtherHealth();
+
+                    outputStream.flush();
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

@@ -9,19 +9,21 @@ public class Bullet implements DrawingObject {
     private static long shootBufferPrevTime = 0;
     private final int SPEED = 1;
     private final int BULLET_IDX;
-    private Vector2 position = new Vector2();
+    private Vector2 position = new Vector2(-100, -100);
     private Vector2 velocity = new Vector2();
     private long directionBufferPrevTime = 0;
     private Ellipse2D.Double bullet;
     private Player owner;
+    private Player otherPlayer;
     private Color color;
     private Clock clock;
 
-    public Bullet(Player owner, int BULLET_IDX, Color COLOR) {
+    public Bullet(Player owner, Player otherPlayer, int BULLET_IDX, Color COLOR) {
         // TODO: Change sprite
         bullet = new Ellipse2D.Double(0, 0, SIZE.x, SIZE.y);
         this.BULLET_IDX = BULLET_IDX;
         this.owner = owner;
+        this.otherPlayer = otherPlayer;
         this.color = COLOR;
         clock = Clock.systemUTC();
     }
@@ -60,11 +62,15 @@ public class Bullet implements DrawingObject {
                 clock.millis() - shootBufferPrevTime > 500) {
             shoot();
         }
-        if (Collision.isCollidingWithWall(position, SIZE)) {
-            velocity = new Vector2();
-        }
         position.x += velocity.x;
         position.y += velocity.y;
+        if (Collision.isCollidingWithWall(position, SIZE)) {
+            velocity = new Vector2();
+        } else if (Collision.isColliding(position, SIZE, otherPlayer.getPosition(), Player.SIZE)) {
+            velocity = new Vector2();
+            position = new Vector2(-100, -100);
+            otherPlayer.hit();
+        }
     }
 
     private void shoot() {
