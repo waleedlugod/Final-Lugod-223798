@@ -31,8 +31,8 @@ public class GameCanvas extends JComponent {
     }
 
     private void addPlayers() {
-        players[0] = new Player(100, 100, true, new Color(ID == 0 ? 0xff0000 : 0x0000ff));
-        players[1] = new Player(200, 100, false, new Color(ID == 1 ? 0xff0000 : 0x0000ff));
+        players[0] = new Player(100, 100, new Color(ID == 0 ? 0xff0000 : 0x0000ff), 0);
+        players[1] = new Player(200, 100, new Color(ID == 1 ? 0xff0000 : 0x0000ff), 1);
         objectsToDraw.add(players[0]);
         objectsToDraw.add(players[1]);
     }

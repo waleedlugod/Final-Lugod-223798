@@ -1,18 +1,20 @@
 import java.io.*;
 import java.net.*;
+import java.awt.*;
+import java.util.*;
 
 public class GameServer {
-    private Vector2[] playerPositions = { new Vector2(), new Vector2() };
-    private Vector2[][] bulletPositions = new Vector2[2][Bullet.MAX_BULLETS];
-    private Vector2[][] bulletVelocities = new Vector2[2][Bullet.MAX_BULLETS];
+    private Player[] players = new Player[2];
+    private Bullet[][] bullets = new Bullet[2][Bullet.MAX_BULLETS];
     private ServerSocket serverSocket;
     private Socket[] clientSockets = new Socket[2];
+    private ArrayList<Thread> readWriteThreads = new ArrayList<>();
 
     public GameServer() {
         System.out.println("-----SERVER-----");
-        initializeBulletArrays();
         createServer();
         acceptConnections();
+        startReadWriteThreads();
     }
 
     private void createServer() {
@@ -22,15 +24,6 @@ public class GameServer {
             System.out.println("Server successfully created.");
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    private void initializeBulletArrays() {
-        for (int i = 0; i < playerPositions.length; i++) {
-            for (int j = 0; j < Bullet.MAX_BULLETS; j++) {
-                bulletPositions[i][j] = new Vector2();
-                bulletVelocities[i][j] = new Vector2();
-            }
         }
     }
 
@@ -46,6 +39,10 @@ public class GameServer {
                 DataOutputStream outputStream = new DataOutputStream(clientSockets[playerCount].getOutputStream());
 
                 int ID = playerCount;
+                players[playerCount] = new Player(0, 0, new Color(ID == 0 ? 0xff0000 : 0x0000ff), ID);
+                for (int i = 0; i < Bullet.MAX_BULLETS; i++) {
+                    bullets[playerCount][i] = new Bullet(players[playerCount], i, new Color(0x00ff00));
+                }
                 outputStream.writeInt(ID);
 
                 setupReadWriteThreads(inputStream, outputStream, ID);
@@ -62,11 +59,17 @@ public class GameServer {
     private void setupReadWriteThreads(DataInputStream inputStream, DataOutputStream outputStream, int ID) {
         ReadFromClient readFromClient = new ReadFromClient(inputStream, ID);
         Thread readThread = new Thread(readFromClient);
-        readThread.start();
+        readWriteThreads.add(readThread);
 
         WriteToClient writeToClient = new WriteToClient(outputStream, ID);
         Thread writeThread = new Thread(writeToClient);
-        writeThread.start();
+        readWriteThreads.add(writeThread);
+    }
+
+    private void startReadWriteThreads() {
+        for (Thread thread : readWriteThreads) {
+            thread.start();
+        }
     }
 
     private class ReadFromClient implements Runnable {
@@ -89,8 +92,9 @@ public class GameServer {
 
         private void readOtherPlayerPosition() {
             try {
-                playerPositions[ID].x = inputStream.readInt();
-                playerPositions[ID].y = inputStream.readInt();
+                int x = inputStream.readInt();
+                int y = inputStream.readInt();
+                players[ID].setPostion(x, y);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -99,8 +103,9 @@ public class GameServer {
         private void readOtherBulletsPositions() {
             try {
                 for (int i = 0; i < Bullet.MAX_BULLETS; i++) {
-                    bulletPositions[ID][i].x = inputStream.readInt();
-                    bulletPositions[ID][i].y = inputStream.readInt();
+                    int x = inputStream.readInt();
+                    int y = inputStream.readInt();
+                    bullets[ID][i].setPosition(x, y);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -110,8 +115,9 @@ public class GameServer {
         private void readOtherBulletsVelocities() {
             try {
                 for (int i = 0; i < Bullet.MAX_BULLETS; i++) {
-                    bulletVelocities[ID][i].x = inputStream.readInt();
-                    bulletVelocities[ID][i].y = inputStream.readInt();
+                    int x = inputStream.readInt();
+                    int y = inputStream.readInt();
+                    bullets[ID][i].setVelocity(x, y);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -121,11 +127,13 @@ public class GameServer {
 
     private class WriteToClient implements Runnable {
         private final int ID;
+        private final int OTHER_ID;
         private DataOutputStream outputStream;
 
         public WriteToClient(DataOutputStream outputStream, int ID) {
             this.outputStream = outputStream;
             this.ID = ID;
+            OTHER_ID = ID == 0 ? 1 : 0;
         }
 
         @Override
@@ -144,9 +152,9 @@ public class GameServer {
 
         private void writeOtherPlayerPosition() {
             try {
-                int otherClientID = ID == 0 ? 1 : 0;
-                outputStream.writeInt(playerPositions[otherClientID].x);
-                outputStream.writeInt(playerPositions[otherClientID].y);
+                Vector2 otherPlayerPosition = players[OTHER_ID].getPosition();
+                outputStream.writeInt(otherPlayerPosition.x);
+                outputStream.writeInt(otherPlayerPosition.y);
                 outputStream.flush();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -155,10 +163,10 @@ public class GameServer {
 
         private void writeOtherBulletsPositions() {
             try {
-                int otherClientID = ID == 0 ? 1 : 0;
                 for (int i = 0; i < Bullet.MAX_BULLETS; i++) {
-                    outputStream.writeInt(bulletPositions[otherClientID][i].x);
-                    outputStream.writeInt(bulletPositions[otherClientID][i].y);
+                    Vector2 otherBulletPosition = bullets[OTHER_ID][i].getPosition();
+                    outputStream.writeInt(otherBulletPosition.x);
+                    outputStream.writeInt(otherBulletPosition.y);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -167,10 +175,10 @@ public class GameServer {
 
         private void writeOtherBulletsVelocities() {
             try {
-                int otherClientID = ID == 0 ? 1 : 0;
                 for (int i = 0; i < Bullet.MAX_BULLETS; i++) {
-                    outputStream.writeInt(bulletVelocities[otherClientID][i].x);
-                    outputStream.writeInt(bulletVelocities[otherClientID][i].y);
+                    Vector2 otherBulletVelocity = bullets[OTHER_ID][i].getVelocity();
+                    outputStream.writeInt(otherBulletVelocity.x);
+                    outputStream.writeInt(otherBulletVelocity.y);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

@@ -59,7 +59,7 @@ public class Bullet implements DrawingObject {
     }
 
     private void animate() {
-        if (owner.IS_SELF &&
+        if (owner.ID == 0 &&
                 shootableIdx == BULLET_IDX &&
                 clock.millis() - shootBufferPrevTime > 500) {
             shoot();

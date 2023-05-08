@@ -2,16 +2,16 @@ import java.awt.*;
 import java.awt.geom.*;
 
 public class Player implements DrawingObject {
+    public final int ID;
     private final int SPEED = 1;
-    public final boolean IS_SELF;
     private Vector2 position = new Vector2();
     private Vector2 size = new Vector2(25, 50);
     private Color color;
     private final Rectangle2D.Double player;
 
-    public Player(int x, int y, boolean IS_SELF, Color color) {
-        this.IS_SELF = IS_SELF;
+    public Player(int x, int y, Color color, int ID) {
         this.color = color;
+        this.ID = ID;
         // TODO: Change sprite
         player = new Rectangle.Double(0, 0, size.x, size.y);
     }
@@ -41,7 +41,7 @@ public class Player implements DrawingObject {
     }
 
     private void animate() {
-        if (IS_SELF) {
+        if (ID == 0) {
             for (String pressedKey : GameFrame.pressedKeys) {
                 switch (pressedKey) {
                     case "A":
