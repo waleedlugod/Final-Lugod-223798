@@ -4,10 +4,10 @@ import java.time.*;
 
 public class Bullet implements DrawingObject {
     public static final int MAX_BULLETS = 4;
-    public static final Vector2 SIZE = new Vector2(10, 10);
+    public static final int SPEED = 2;
+    public static final Vector2 SIZE = new Vector2(15, 15);
     private static int shootableIdx = 0;
     private static long shootBufferPrevTime = 0;
-    private final int SPEED = 1;
     private final int BULLET_IDX;
     private Vector2 position = new Vector2(-100, -100);
     private Vector2 velocity = new Vector2();
@@ -59,7 +59,7 @@ public class Bullet implements DrawingObject {
     private void animate() {
         if (owner.ID == 0 &&
                 shootableIdx == BULLET_IDX &&
-                clock.millis() - shootBufferPrevTime > 500) {
+                clock.millis() - shootBufferPrevTime > 200) {
             shoot();
         }
         position.x += velocity.x;
