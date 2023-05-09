@@ -3,29 +3,36 @@ import javax.swing.*;
 import java.util.*;
 
 public class GameCanvas extends JComponent {
+    // TODO: Change size
     public static final int WIDTH = 300;
-    public static final int HEIGHT = 300;
+    public static final int HEIGHT = 200;
     public Bullet[][] bullets = new Bullet[2][Bullet.MAX_BULLETS];
     public Player[] players = new Player[2];
     private final int CLIENT_ID;
-    private final int FRAME_ID;
+    private final int CANVAS_ID;
     private ArrayList<DrawingObject> objectsToDraw = new ArrayList<DrawingObject>();
     private PlayerStats playerStats;
 
-    public GameCanvas(int CLIENT_ID, int FRAME_ID) {
+    public GameCanvas(int CLIENT_ID, int CANVAS_ID) {
         this.CLIENT_ID = CLIENT_ID;
-        this.FRAME_ID = FRAME_ID;
+        this.CANVAS_ID = CANVAS_ID;
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
         addPlayers();
         addBullets();
-        playerStats = new PlayerStats(players);
+
+        if (CANVAS_ID == 0) {
+            playerStats = new PlayerStats(players);
+            objectsToDraw.add(playerStats);
+        }
+
+        objectsToDraw.add(new Border());
     }
 
     private void addPlayers() {
-        players[0] = new Player(new Color(CLIENT_ID == 0 ? 0xff0000 : 0x0000ff, FRAME_ID != 0), 0);
-        players[1] = new Player(new Color(CLIENT_ID == 0 ? 0x0000ff : 0xff0000, FRAME_ID != 1), 1);
+        players[0] = new Player(new Color(CLIENT_ID == 0 ? 0xff0000 : 0x0000ff, CANVAS_ID != 0), 0);
+        players[1] = new Player(new Color(CLIENT_ID == 0 ? 0x0000ff : 0xff0000, CANVAS_ID != 1), 1);
         objectsToDraw.add(players[0]);
         objectsToDraw.add(players[1]);
     }
@@ -88,6 +95,5 @@ public class GameCanvas extends JComponent {
         for (DrawingObject object : objectsToDraw) {
             object.draw(g2d);
         }
-        playerStats.draw(g2d);
     }
 }

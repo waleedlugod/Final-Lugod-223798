@@ -4,8 +4,7 @@ import java.io.*;
 public class GameClient {
     private int CLIENT_ID = -1;
     private Socket clientSocket;
-    private final GameCanvas gameCanvas;
-    private final GameCanvas gameCanvas2;
+    private final GameFrame FRAME;
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
 
@@ -13,14 +12,8 @@ public class GameClient {
         System.out.println("-----CLIENT-----");
         connectToServer();
 
-        GameFrame gameFrame = new GameFrame(CLIENT_ID, 0);
-        gameFrame.setupGUI();
-        gameCanvas = gameFrame.getGameCanvas();
-
-        GameFrame gameFrame2 = new GameFrame(CLIENT_ID, 1);
-        gameFrame2.setupGUI();
-        gameFrame2.setTitle("Player " + (int) (CLIENT_ID + 1) + " 2");
-        gameCanvas2 = gameFrame2.getGameCanvas();
+        FRAME = new GameFrame(CLIENT_ID);
+        FRAME.setupGUI();
 
         setupReadWriteThreads(inputStream, outputStream);
     }
@@ -63,7 +56,7 @@ public class GameClient {
             try {
                 int x = inputStream.readInt();
                 int y = inputStream.readInt();
-                gameCanvas.players[1].setPostion(x, y);
+                FRAME.selfCanvas.players[1].setPostion(x, y);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -74,7 +67,7 @@ public class GameClient {
                 for (int i = 0; i < Bullet.MAX_BULLETS; i++) {
                     int x = inputStream.readInt();
                     int y = inputStream.readInt();
-                    gameCanvas.bullets[1][i].setPosition(x, y);
+                    FRAME.selfCanvas.bullets[1][i].setPosition(x, y);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -83,8 +76,8 @@ public class GameClient {
 
         private void readSelfStats() {
             try {
-                gameCanvas.players[0].health = inputStream.readInt();
-                gameCanvas.players[0].losses = inputStream.readInt();
+                FRAME.selfCanvas.players[0].health = inputStream.readInt();
+                FRAME.selfCanvas.players[0].losses = inputStream.readInt();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -96,7 +89,7 @@ public class GameClient {
                 readOtherPlayerPosition();
                 readOtherBulletsPositions();
                 readSelfStats();
-                gameCanvas2.copy(gameCanvas);
+                FRAME.enemyCanvas.copy(FRAME.selfCanvas);
             }
         }
     }
@@ -110,8 +103,8 @@ public class GameClient {
 
         private void writeSelfPlayerPosition() {
             try {
-                outputStream.writeInt(gameCanvas.players[0].getPosition().x);
-                outputStream.writeInt(gameCanvas.players[0].getPosition().y);
+                outputStream.writeInt(FRAME.selfCanvas.players[0].getPosition().x);
+                outputStream.writeInt(FRAME.selfCanvas.players[0].getPosition().y);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -119,9 +112,9 @@ public class GameClient {
 
         private void writeSelfBulletsPositions() {
             try {
-                for (int i = 0; i < gameCanvas.bullets[1].length; i++) {
-                    outputStream.writeInt(gameCanvas.bullets[0][i].getPosition().x);
-                    outputStream.writeInt(gameCanvas.bullets[0][i].getPosition().y);
+                for (int i = 0; i < FRAME.selfCanvas.bullets[1].length; i++) {
+                    outputStream.writeInt(FRAME.selfCanvas.bullets[0][i].getPosition().x);
+                    outputStream.writeInt(FRAME.selfCanvas.bullets[0][i].getPosition().y);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -130,8 +123,8 @@ public class GameClient {
 
         private void writeOtherStats() {
             try {
-                outputStream.writeInt(gameCanvas.players[1].health);
-                outputStream.writeInt(gameCanvas.players[1].losses);
+                outputStream.writeInt(FRAME.selfCanvas.players[1].health);
+                outputStream.writeInt(FRAME.selfCanvas.players[1].losses);
             } catch (IOException e) {
                 e.printStackTrace();
             }

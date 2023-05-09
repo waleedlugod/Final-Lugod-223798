@@ -1,43 +1,44 @@
 import javax.swing.*;
+
+import java.awt.GridLayout;
 import java.awt.event.*;
 import java.util.ArrayList;
 
 public class GameFrame extends JFrame {
     public static final ArrayList<String> pressedKeys = new ArrayList<>();
-    private GameCanvas gameCanvas;
+    public GameCanvas selfCanvas;
+    public GameCanvas enemyCanvas;
     private final int CLIENT_ID;
-    private final int FRAME_ID;
 
-    public GameFrame(int CLIENT_ID, int FRAME_ID) {
+    public GameFrame(int CLIENT_ID) {
         this.CLIENT_ID = CLIENT_ID;
-        this.FRAME_ID = FRAME_ID;
 
         JPanel keyBindingsPane = (JPanel) getContentPane();
         keyBindingsPane.setFocusable(true);
         addKeyListeners(keyBindingsPane);
-        gameCanvas = new GameCanvas(CLIENT_ID, FRAME_ID);
+        selfCanvas = new GameCanvas(CLIENT_ID, 0);
+        enemyCanvas = new GameCanvas(CLIENT_ID, 1);
     }
 
     public void setupGUI() {
         Timer timer = new Timer(0, new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                gameCanvas.repaint();
+                selfCanvas.repaint();
+                enemyCanvas.repaint();
             }
         });
         timer.start();
-        add(gameCanvas);
-        setTitle("Player " + (int) (CLIENT_ID + 1));
+        setLayout(new GridLayout(2, 1));
+        add(selfCanvas);
+        add(enemyCanvas);
+        setTitle(String.format("Player %d", CLIENT_ID + 1));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         pack();
     }
 
-    public GameCanvas getGameCanvas() {
-        return gameCanvas;
-    }
-
-    public void setGameCanvas(GameCanvas gameCanvas) {
-        this.gameCanvas = gameCanvas;
+    public void setSelfCanvas(GameCanvas gameCanvas) {
+        this.selfCanvas = gameCanvas;
     }
 
     private void addKeyListeners(JPanel contentPane) {

@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.awt.geom.*;
 
-public class PlayerStats {
+public class PlayerStats implements DrawingObject {
     private final Player[] players;
 
     public PlayerStats(Player[] players) {
