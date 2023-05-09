@@ -64,7 +64,6 @@ public class GameClient {
                 int x = inputStream.readInt();
                 int y = inputStream.readInt();
                 gameCanvas.players[1].setPostion(x, y);
-                gameCanvas2.players[1].setPostion(x, y);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -76,18 +75,16 @@ public class GameClient {
                     int x = inputStream.readInt();
                     int y = inputStream.readInt();
                     gameCanvas.bullets[1][i].setPosition(x, y);
-                    gameCanvas2.bullets[1][i].setPosition(x, y);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        private void readSelfHealth() {
+        private void readSelfStats() {
             try {
-                int health = inputStream.readInt();
-                gameCanvas.players[0].health = health;
-                gameCanvas2.players[0].health = health;
+                gameCanvas.players[0].health = inputStream.readInt();
+                gameCanvas.players[0].losses = inputStream.readInt();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -98,7 +95,8 @@ public class GameClient {
             while (true) {
                 readOtherPlayerPosition();
                 readOtherBulletsPositions();
-                readSelfHealth();
+                readSelfStats();
+                gameCanvas2.copy(gameCanvas);
             }
         }
     }
@@ -130,9 +128,10 @@ public class GameClient {
             }
         }
 
-        private void writeOtherHealth() {
+        private void writeOtherStats() {
             try {
                 outputStream.writeInt(gameCanvas.players[1].health);
+                outputStream.writeInt(gameCanvas.players[1].losses);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -144,7 +143,7 @@ public class GameClient {
                 try {
                     writeSelfPlayerPosition();
                     writeSelfBulletsPositions();
-                    writeOtherHealth();
+                    writeOtherStats();
 
                     outputStream.flush();
                     try {

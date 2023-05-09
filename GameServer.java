@@ -40,7 +40,7 @@ public class GameServer {
                 DataOutputStream outputStream = new DataOutputStream(clientSockets[playerCount].getOutputStream());
 
                 int ID = playerCount;
-                players[playerCount] = new Player(0, 0, new Color(ID == 0 ? 0xff0000 : 0x0000ff), ID);
+                players[playerCount] = new Player(new Color(ID == 0 ? 0xff0000 : 0x0000ff), ID);
                 for (int i = 0; i < Bullet.MAX_BULLETS; i++) {
                     bullets[playerCount][i] = new Bullet(players[playerCount], null, i, new Color(0x00ff00));
                 }
@@ -106,9 +106,10 @@ public class GameServer {
             }
         }
 
-        private void readOtherHealth() {
+        private void readOtherStats() {
             try {
                 players[OTHER_ID].health = inputStream.readInt();
+                players[OTHER_ID].losses = inputStream.readInt();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -119,7 +120,7 @@ public class GameServer {
             while (true) {
                 readSelfPlayerPosition();
                 readSelfBulletsPositions();
-                readOtherHealth();
+                readOtherStats();
             }
         }
     }
@@ -158,9 +159,10 @@ public class GameServer {
             }
         }
 
-        private void writeSelfHealth() {
+        private void writeSelfStats() {
             try {
                 outputStream.writeInt(players[ID].health);
+                outputStream.writeInt(players[ID].losses);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -172,7 +174,7 @@ public class GameServer {
                 try {
                     writeOtherPlayerPosition();
                     writeOtherBulletsPositions();
-                    writeSelfHealth();
+                    writeSelfStats();
 
                     Thread.sleep(10);
                 } catch (InterruptedException e) {

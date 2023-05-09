@@ -72,7 +72,7 @@ public class Bullet implements DrawingObject {
         }
     }
 
-    private void reset() {
+    public void reset() {
         velocity = new Vector2();
         position = new Vector2(-100, -100);
     }
