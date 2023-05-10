@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class GameFrame extends JFrame {
     public static final ArrayList<String> pressedKeys = new ArrayList<>();
+    public static int animationFrame = 0;
     public GameCanvas selfCanvas;
     public GameCanvas enemyCanvas;
     private final int CLIENT_ID;
@@ -22,12 +23,20 @@ public class GameFrame extends JFrame {
 
     public void setupGUI() {
         Timer timer = new Timer(0, new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
                 selfCanvas.repaint();
                 enemyCanvas.repaint();
             }
         });
         timer.start();
+        Timer animationTimer = new Timer(100, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                animationFrame = (animationFrame + 1) % 4;
+            }
+        });
+        animationTimer.start();
         setLayout(new GridLayout(2, 1));
         add(selfCanvas);
         add(enemyCanvas);

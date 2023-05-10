@@ -41,7 +41,7 @@ public class GameServer {
                 DataOutputStream outputStream = new DataOutputStream(clientSockets[playerCount].getOutputStream());
 
                 int ID = playerCount;
-                players[playerCount] = new Player(null, new Vector2(), false);
+                players[playerCount] = new Player(new Vector2(), false);
                 for (int i = 0; i < Bullet.MAX_BULLETS; i++) {
                     bullets[playerCount][i] = new Bullet(players[playerCount], null, i, new Color(0x00ff00));
                 }

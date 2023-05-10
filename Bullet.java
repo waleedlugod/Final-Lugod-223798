@@ -109,7 +109,7 @@ public class Bullet implements DrawingObject {
 
     private void centerOnPlayer() {
         position = owner.getPosition();
-        position.x += Player.SIZE.x / 2 - SIZE.x;
-        position.y += Player.SIZE.y / 2 - SIZE.y;
+        position.x += Player.SIZE.x / 2 - SIZE.x / 2;
+        position.y += Player.SIZE.y / 2 - SIZE.y / 2;
     }
 }

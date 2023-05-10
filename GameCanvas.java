@@ -8,8 +8,8 @@ public class GameCanvas extends JComponent {
     public static final int HEIGHT = 300;
     public Bullet[][] bullets = new Bullet[2][Bullet.MAX_BULLETS];
     public Player[] players = new Player[2];
-    private final int CLIENT_ID;
-    private final int CANVAS_ID;
+    public final int CLIENT_ID;
+    public final int CANVAS_ID;
     private ArrayList<DrawingObject> objectsToDraw = new ArrayList<DrawingObject>();
     private PlayerStats playerStats;
 
@@ -31,14 +31,10 @@ public class GameCanvas extends JComponent {
     }
 
     private void addPlayers() {
-        players[0] = new Player(
-                new Color(CLIENT_ID == 0 ? 0xff0000 : 0x0000ff, CANVAS_ID != 0),
-                new Vector2(CLIENT_ID == 0 ? 100 : WIDTH - 100, HEIGHT / 2),
-                true);
-        players[1] = new Player(
-                new Color(CLIENT_ID == 0 ? 0x0000ff : 0xff0000, CANVAS_ID != 1),
-                new Vector2(CLIENT_ID == 0 ? WIDTH - 100 : 100, HEIGHT / 2),
-                false);
+        players[0] = new Player(new Vector2(CLIENT_ID == 0 ? 100 : WIDTH - 100, HEIGHT / 2), true);
+        players[1] = new Player(new Vector2(CLIENT_ID == 0 ? WIDTH - 100 : 100, HEIGHT / 2), false);
+        players[0].loadAssets(this);
+        players[1].loadAssets(this);
         objectsToDraw.add(players[0]);
         objectsToDraw.add(players[1]);
     }
