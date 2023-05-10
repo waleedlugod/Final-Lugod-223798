@@ -3,6 +3,7 @@ import java.net.*;
 import java.awt.*;
 import java.util.*;
 
+// TODO: Fix reset posiion
 public class GameServer {
     private Player[] players = new Player[2];
     private Bullet[][] bullets = new Bullet[2][Bullet.MAX_BULLETS];

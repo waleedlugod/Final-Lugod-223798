@@ -4,8 +4,8 @@ import java.util.*;
 
 public class GameCanvas extends JComponent {
     // TODO: Change size
-    public static final int WIDTH = 300;
-    public static final int HEIGHT = 200;
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 300;
     public Bullet[][] bullets = new Bullet[2][Bullet.MAX_BULLETS];
     public Player[] players = new Player[2];
     private final int CLIENT_ID;
