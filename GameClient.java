@@ -74,10 +74,9 @@ public class GameClient {
             }
         }
 
-        private void readSelfStats() {
+        private void readOtherStats() {
             try {
-                FRAME.selfCanvas.players[0].health = inputStream.readInt();
-                FRAME.selfCanvas.players[0].losses = inputStream.readInt();
+                FRAME.selfCanvas.players[1].points = inputStream.readInt();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -88,7 +87,7 @@ public class GameClient {
             while (true) {
                 readOtherPlayerPosition();
                 readOtherBulletsPositions();
-                readSelfStats();
+                readOtherStats();
                 FRAME.enemyCanvas.copy(FRAME.selfCanvas);
             }
         }
@@ -121,10 +120,9 @@ public class GameClient {
             }
         }
 
-        private void writeOtherStats() {
+        private void writeSelfStats() {
             try {
-                outputStream.writeInt(FRAME.selfCanvas.players[1].health);
-                outputStream.writeInt(FRAME.selfCanvas.players[1].losses);
+                outputStream.writeInt(FRAME.selfCanvas.players[0].points);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -136,7 +134,7 @@ public class GameClient {
                 try {
                     writeSelfPlayerPosition();
                     writeSelfBulletsPositions();
-                    writeOtherStats();
+                    writeSelfStats();
 
                     outputStream.flush();
                     try {

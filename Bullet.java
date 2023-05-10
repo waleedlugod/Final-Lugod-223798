@@ -57,9 +57,7 @@ public class Bullet implements DrawingObject {
     }
 
     private void animate() {
-        if (owner.ID == 0 &&
-                shootableIdx == BULLET_IDX &&
-                clock.millis() - shootBufferPrevTime > 200) {
+        if (owner.IS_SELF && shootableIdx == BULLET_IDX && clock.millis() - shootBufferPrevTime > 200) {
             shoot();
         }
         position.x += velocity.x;
@@ -68,7 +66,7 @@ public class Bullet implements DrawingObject {
             reset();
         } else if (Collision.isColliding(position, SIZE, otherPlayer.getPosition(), Player.SIZE)) {
             reset();
-            otherPlayer.hit();
+            owner.points++;
         }
     }
 

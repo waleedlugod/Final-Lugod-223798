@@ -31,8 +31,14 @@ public class GameCanvas extends JComponent {
     }
 
     private void addPlayers() {
-        players[0] = new Player(new Color(CLIENT_ID == 0 ? 0xff0000 : 0x0000ff, CANVAS_ID != 0), 0);
-        players[1] = new Player(new Color(CLIENT_ID == 0 ? 0x0000ff : 0xff0000, CANVAS_ID != 1), 1);
+        players[0] = new Player(
+                new Color(CLIENT_ID == 0 ? 0xff0000 : 0x0000ff, CANVAS_ID != 0),
+                new Vector2(CLIENT_ID == 0 ? 100 : WIDTH - 100, HEIGHT / 2),
+                true);
+        players[1] = new Player(
+                new Color(CLIENT_ID == 0 ? 0x0000ff : 0xff0000, CANVAS_ID != 1),
+                new Vector2(CLIENT_ID == 0 ? WIDTH - 100 : 100, HEIGHT / 2),
+                false);
         objectsToDraw.add(players[0]);
         objectsToDraw.add(players[1]);
     }
@@ -54,9 +60,7 @@ public class GameCanvas extends JComponent {
         for (int i = 0; i < 2; i++) {
             Vector2 playerPosition = gameCanvas.players[i].getPosition();
             players[i].setPostion(playerPosition.x, playerPosition.y);
-            players[i].health = gameCanvas.players[i].health;
-            players[i].wins = gameCanvas.players[i].wins;
-            players[i].losses = gameCanvas.players[i].losses;
+            players[i].points = gameCanvas.players[i].points;
             for (int j = 0; j < Bullet.MAX_BULLETS; j++) {
                 Vector2 bulletPosition = gameCanvas.bullets[i][j].getPosition();
                 Vector2 bulletVelocity = gameCanvas.bullets[i][j].getVelocity();
@@ -66,31 +70,11 @@ public class GameCanvas extends JComponent {
         }
     }
 
-    private void reset() {
-        for (int i = 0; i < 2; i++) {
-            players[i].reset();
-            for (int j = 0; j < Bullet.MAX_BULLETS; j++) {
-                bullets[i][j].reset();
-            }
-        }
-    }
-
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHints(rh);
-
-        if (players[0].health <= 0 || players[1].health <= 0) {
-            if (players[0].health <= 0) {
-                players[0].losses++;
-                players[1].wins++;
-            } else if (players[1].health <= 0) {
-                players[0].wins++;
-                players[1].losses++;
-            }
-            reset();
-        }
 
         for (DrawingObject object : objectsToDraw) {
             object.draw(g2d);
