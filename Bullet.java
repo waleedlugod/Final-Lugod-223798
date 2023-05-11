@@ -77,15 +77,15 @@ public class Bullet implements DrawingObject {
     // assets https://bdragon1727.itch.io/fire-pixel-bullet-16x16
     public void loadAssets(GameCanvas canvas) {
         try {
-            if ((canvas.CLIENT_ID == 0 && owner.IS_SELF)
-                    || (canvas.CLIENT_ID == 1 && !owner.IS_SELF)) {
+            if ((canvas.CLIENT_ID == 0 && canvas.CANVAS_ID == 1 && owner.IS_SELF)
+                    || (canvas.CLIENT_ID == 1 && canvas.CANVAS_ID == 0 && !owner.IS_SELF)) {
                 for (int i = 0; i < sprites.length; i++) {
                     sprites[i] = ImageIO.read(new File(String.format("assets/player1/bullet/energyBall%d.png", i)));
                 }
                 spriteOffset = new Vector2(-3, -3);
                 spriteScale = new double[] { 1.5, 1.5 };
-            } else if ((canvas.CLIENT_ID == 0 && !owner.IS_SELF)
-                    || (canvas.CLIENT_ID == 1 && owner.IS_SELF)) {
+            } else if ((canvas.CLIENT_ID == 0 && canvas.CANVAS_ID == 0 && !owner.IS_SELF)
+                    || (canvas.CLIENT_ID == 1 && canvas.CANVAS_ID == 1 && owner.IS_SELF)) {
                 for (int i = 0; i < sprites.length; i++) {
                     sprites[i] = ImageIO.read(new File(String.format("assets/player2/bullet/magic%d.png", i)));
                 }

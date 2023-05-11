@@ -26,6 +26,7 @@ public class Player implements DrawingObject {
 
     private Vector2 position = new Vector2();
     private Vector2 spriteOffset = new Vector2();
+    private boolean facingLeft = false;
 
     public Player(Vector2 RESET_POSITION, boolean IS_SELF) {
         position = new Vector2(RESET_POSITION.x, RESET_POSITION.y);
@@ -39,7 +40,10 @@ public class Player implements DrawingObject {
         animate();
         AffineTransform reset = g2d.getTransform();
         g2d.translate(position.x, position.y);
+        g2d.draw(new Rectangle.Double(0, 0, SIZE.x, SIZE.y));
         g2d.scale(2, 2);
+        if (facingLeft)
+            flip(g2d);
         g2d.drawImage(sprites[Player.animationFrame], null, spriteOffset.x, spriteOffset.y);
         g2d.setTransform(reset);
     }
@@ -78,6 +82,11 @@ public class Player implements DrawingObject {
         }
     }
 
+    private void flip(Graphics2D g2d) {
+        g2d.scale(-1, 1);
+        g2d.translate(-SIZE.x / 2, 0);
+    }
+
     private void animate() {
         if (IS_SELF) {
             Vector2 newPosition = new Vector2(position.x, position.y);
@@ -85,9 +94,11 @@ public class Player implements DrawingObject {
                 switch (pressedKey) {
                     case "A":
                         newPosition.x -= SPEED;
+                        facingLeft = true;
                         break;
                     case "D":
                         newPosition.x += SPEED;
+                        facingLeft = false;
                         break;
                     case "W":
                         newPosition.y -= SPEED;
