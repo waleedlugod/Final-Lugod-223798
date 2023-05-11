@@ -11,7 +11,6 @@ public class GameCanvas extends JComponent {
     public final int CLIENT_ID;
     public final int CANVAS_ID;
     private ArrayList<DrawingObject> objectsToDraw = new ArrayList<DrawingObject>();
-    private PlayerStats playerStats;
 
     public GameCanvas(int CLIENT_ID, int CANVAS_ID) {
         this.CLIENT_ID = CLIENT_ID;
@@ -23,10 +22,7 @@ public class GameCanvas extends JComponent {
         addPlayers();
         addBullets();
 
-        if (CANVAS_ID == 0) {
-            playerStats = new PlayerStats(players);
-            objectsToDraw.add(playerStats);
-        }
+        objectsToDraw.add(new PlayerStats(players[CANVAS_ID]));
     }
 
     private void addBackground() {
@@ -67,7 +63,7 @@ public class GameCanvas extends JComponent {
         for (int i = 0; i < 2; i++) {
             Vector2 playerPosition = gameCanvas.players[i].getPosition();
             players[i].setPostion(playerPosition.x, playerPosition.y);
-            players[i].points = gameCanvas.players[i].points;
+            players[i].health = gameCanvas.players[i].health;
             for (int j = 0; j < Bullet.MAX_BULLETS; j++) {
                 Vector2 bulletPosition = gameCanvas.bullets[i][j].getPosition();
                 Vector2 bulletVelocity = gameCanvas.bullets[i][j].getVelocity();

@@ -106,9 +106,9 @@ public class GameServer {
             }
         }
 
-        private void readSelfStats() {
+        private void readOtherHealth() {
             try {
-                players[ID].points = inputStream.readInt();
+                players[OTHER_ID].health = inputStream.readInt();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -119,7 +119,7 @@ public class GameServer {
             while (true) {
                 readSelfPlayerPosition();
                 readSelfBulletsData();
-                readSelfStats();
+                readOtherHealth();
             }
         }
     }
@@ -161,9 +161,9 @@ public class GameServer {
             }
         }
 
-        private void writeOtherStats() {
+        private void writeSelfHealth() {
             try {
-                outputStream.writeInt(players[OTHER_ID].points);
+                outputStream.writeInt(players[ID].health);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -175,7 +175,7 @@ public class GameServer {
                 try {
                     writeOtherPlayerPosition();
                     writeOtherBulletsData();
-                    writeOtherStats();
+                    writeSelfHealth();
 
                     Thread.sleep(10);
                 } catch (InterruptedException e) {

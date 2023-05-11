@@ -111,7 +111,7 @@ public class Bullet implements DrawingObject {
             reset();
         } else if (Collision.isColliding(position, SIZE, otherPlayer.getPosition(), Player.SIZE)) {
             reset();
-            owner.points++;
+            otherPlayer.health--;
         }
     }
 

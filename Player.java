@@ -13,7 +13,7 @@ public class Player implements DrawingObject {
     public static final Vector2 SIZE = new Vector2(24, 34);
     public final boolean IS_SELF;
 
-    public int points = 0;
+    public int health = MAX_HEALTH;
 
     private static int animationFrame = 0;
     private static final Timer animationTimer = new Timer(100, new ActionListener() {
@@ -40,7 +40,6 @@ public class Player implements DrawingObject {
         animate();
         AffineTransform reset = g2d.getTransform();
         g2d.translate(position.x, position.y);
-        g2d.draw(new Rectangle.Double(0, 0, SIZE.x, SIZE.y));
         g2d.scale(2, 2);
         if (facingLeft)
             flip(g2d);
