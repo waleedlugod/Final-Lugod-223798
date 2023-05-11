@@ -1,21 +1,36 @@
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
+import java.awt.event.*;
 import java.io.*;
+import javax.swing.*;
 import javax.imageio.*;
 
 public class Player implements DrawingObject {
-    public final static int MAX_HEALTH = 5;
+
+    public static final int MAX_HEALTH = 5;
     public static final int SPEED = 1;
-    public static final Vector2 SIZE = new Vector2(28, 34);
+    public static final Vector2 SIZE = new Vector2(24, 34);
     public final boolean IS_SELF;
+
     public int points = 0;
-    private Vector2 position = new Vector2();
+
+    private static int animationFrame = 0;
+    private static final Timer animationTimer = new Timer(100, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            animationFrame = (animationFrame + 1) % 4;
+        }
+    });;
     private BufferedImage[] sprites = new BufferedImage[4];
+
+    private Vector2 position = new Vector2();
     private Vector2 spriteOffset = new Vector2();
 
     public Player(Vector2 RESET_POSITION, boolean IS_SELF) {
         this.IS_SELF = IS_SELF;
+        if (!Player.animationTimer.isRunning())
+            animationTimer.start();
     }
 
     @Override
@@ -23,11 +38,8 @@ public class Player implements DrawingObject {
         animate();
         AffineTransform reset = g2d.getTransform();
         g2d.translate(position.x, position.y);
-        // hitbox
-        // TODO: remove on submission
-        g2d.draw(new Rectangle.Double(0, 0, SIZE.x, SIZE.y));
         g2d.scale(2, 2);
-        g2d.drawImage(sprites[GameFrame.animationFrame], null, spriteOffset.x, spriteOffset.y);
+        g2d.drawImage(sprites[Player.animationFrame], null, spriteOffset.x, spriteOffset.y);
         g2d.setTransform(reset);
     }
 
@@ -49,7 +61,7 @@ public class Player implements DrawingObject {
                     sprites[i] = ImageIO.read(new File(
                             String.format("assets/player1/idle/wizzard_m_idle_anim_f%d.png", i)));
                 }
-                spriteOffset = new Vector2(-2, -11);
+                spriteOffset = new Vector2(-3, -11);
             } else if ((canvas.CLIENT_ID == 0 && canvas.CANVAS_ID == 1 && !IS_SELF)
                     || (canvas.CLIENT_ID == 1 && canvas.CANVAS_ID == 0 && IS_SELF)) {
 

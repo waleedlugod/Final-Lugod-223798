@@ -45,8 +45,8 @@ public class GameCanvas extends JComponent {
                 bullets[i][j] = new Bullet(
                         i == 0 ? players[0] : players[1],
                         i == 0 ? players[1] : players[0],
-                        j,
-                        new Color(0x00ff00));
+                        j);
+                bullets[i][j].loadAssets(this);
                 objectsToDraw.add(bullets[i][j]);
             }
         }

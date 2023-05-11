@@ -62,12 +62,11 @@ public class GameClient {
             }
         }
 
-        private void readOtherBulletsPositions() {
+        private void readOtherBulletsData() {
             try {
                 for (int i = 0; i < Bullet.MAX_BULLETS; i++) {
-                    int x = inputStream.readInt();
-                    int y = inputStream.readInt();
-                    FRAME.selfCanvas.bullets[1][i].setPosition(x, y);
+                    FRAME.selfCanvas.bullets[1][i].setPosition(inputStream.readInt(), inputStream.readInt());
+                    FRAME.selfCanvas.bullets[1][i].setVelocity(inputStream.readInt(), inputStream.readInt());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -86,7 +85,7 @@ public class GameClient {
         public void run() {
             while (true) {
                 readOtherPlayerPosition();
-                readOtherBulletsPositions();
+                readOtherBulletsData();
                 readOtherStats();
                 FRAME.enemyCanvas.copy(FRAME.selfCanvas);
             }
@@ -109,11 +108,13 @@ public class GameClient {
             }
         }
 
-        private void writeSelfBulletsPositions() {
+        private void writeSelfBulletsData() {
             try {
                 for (int i = 0; i < FRAME.selfCanvas.bullets[1].length; i++) {
                     outputStream.writeInt(FRAME.selfCanvas.bullets[0][i].getPosition().x);
                     outputStream.writeInt(FRAME.selfCanvas.bullets[0][i].getPosition().y);
+                    outputStream.writeInt(FRAME.selfCanvas.bullets[0][i].getVelocity().x);
+                    outputStream.writeInt(FRAME.selfCanvas.bullets[0][i].getVelocity().y);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -133,7 +134,7 @@ public class GameClient {
             while (true) {
                 try {
                     writeSelfPlayerPosition();
-                    writeSelfBulletsPositions();
+                    writeSelfBulletsData();
                     writeSelfStats();
 
                     outputStream.flush();
