@@ -85,11 +85,10 @@ public class GameServer {
             OTHER_ID = ID == 0 ? 1 : 0;
         }
 
-        private void readSelfPlayerPosition() {
+        private void readSelfPlayerData() {
             try {
-                int x = inputStream.readInt();
-                int y = inputStream.readInt();
-                players[ID].setPostion(x, y);
+                players[ID].setPostion(inputStream.readInt(), inputStream.readInt());
+                players[ID].isFacingLeft = inputStream.readBoolean();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -117,7 +116,7 @@ public class GameServer {
         @Override
         public void run() {
             while (true) {
-                readSelfPlayerPosition();
+                readSelfPlayerData();
                 readSelfBulletsData();
                 readOtherHealth();
             }
@@ -135,12 +134,12 @@ public class GameServer {
             OTHER_ID = ID == 0 ? 1 : 0;
         }
 
-        private void writeOtherPlayerPosition() {
+        private void writeOtherPlayerData() {
             try {
                 Vector2 otherPlayerPosition = players[OTHER_ID].getPosition();
                 outputStream.writeInt(otherPlayerPosition.x);
                 outputStream.writeInt(otherPlayerPosition.y);
-                outputStream.flush();
+                outputStream.writeBoolean(players[OTHER_ID].isFacingLeft);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -173,12 +172,17 @@ public class GameServer {
         public void run() {
             while (true) {
                 try {
-                    writeOtherPlayerPosition();
+                    writeOtherPlayerData();
                     writeOtherBulletsData();
                     writeSelfHealth();
+                    outputStream.flush();
 
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }

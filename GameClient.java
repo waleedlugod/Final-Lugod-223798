@@ -52,11 +52,10 @@ public class GameClient {
             this.inputStream = inputStream;
         }
 
-        private void readOtherPlayerPosition() {
+        private void readOtherPlayerData() {
             try {
-                int x = inputStream.readInt();
-                int y = inputStream.readInt();
-                FRAME.selfCanvas.players[1].setPostion(x, y);
+                FRAME.selfCanvas.players[1].setPostion(inputStream.readInt(), inputStream.readInt());
+                FRAME.enemyCanvas.players[1].isFacingLeft = inputStream.readBoolean();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -84,7 +83,7 @@ public class GameClient {
         @Override
         public void run() {
             while (true) {
-                readOtherPlayerPosition();
+                readOtherPlayerData();
                 readOtherBulletsData();
                 readSelfHealth();
                 FRAME.enemyCanvas.copy(FRAME.selfCanvas);
@@ -99,10 +98,11 @@ public class GameClient {
             this.outputStream = outputStream;
         }
 
-        private void writeSelfPlayerPosition() {
+        private void writeSelfPlayerData() {
             try {
                 outputStream.writeInt(FRAME.selfCanvas.players[0].getPosition().x);
                 outputStream.writeInt(FRAME.selfCanvas.players[0].getPosition().y);
+                outputStream.writeBoolean(FRAME.selfCanvas.players[0].isFacingLeft);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -133,10 +133,9 @@ public class GameClient {
         public void run() {
             while (true) {
                 try {
-                    writeSelfPlayerPosition();
+                    writeSelfPlayerData();
                     writeSelfBulletsData();
                     writeOtherHealth();
-
                     outputStream.flush();
                     try {
                         Thread.sleep(10);

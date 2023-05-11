@@ -14,6 +14,7 @@ public class Player implements DrawingObject {
     public final boolean IS_SELF;
 
     public int health = MAX_HEALTH;
+    public boolean isFacingLeft = false;
 
     private static int animationFrame = 0;
     private static final Timer animationTimer = new Timer(100, new ActionListener() {
@@ -26,7 +27,6 @@ public class Player implements DrawingObject {
 
     private Vector2 position = new Vector2();
     private Vector2 spriteOffset = new Vector2();
-    private boolean facingLeft = false;
 
     public Player(Vector2 RESET_POSITION, boolean IS_SELF) {
         position = new Vector2(RESET_POSITION.x, RESET_POSITION.y);
@@ -41,7 +41,7 @@ public class Player implements DrawingObject {
         AffineTransform reset = g2d.getTransform();
         g2d.translate(position.x, position.y);
         g2d.scale(2, 2);
-        if (facingLeft)
+        if (isFacingLeft)
             flip(g2d);
         g2d.drawImage(sprites[Player.animationFrame], null, spriteOffset.x, spriteOffset.y);
         g2d.setTransform(reset);
@@ -93,11 +93,11 @@ public class Player implements DrawingObject {
                 switch (pressedKey) {
                     case "A":
                         newPosition.x -= SPEED;
-                        facingLeft = true;
+                        isFacingLeft = true;
                         break;
                     case "D":
                         newPosition.x += SPEED;
-                        facingLeft = false;
+                        isFacingLeft = false;
                         break;
                     case "W":
                         newPosition.y -= SPEED;
