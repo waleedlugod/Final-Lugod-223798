@@ -28,6 +28,7 @@ public class Player implements DrawingObject {
     private Vector2 spriteOffset = new Vector2();
 
     public Player(Vector2 RESET_POSITION, boolean IS_SELF) {
+        position = new Vector2(RESET_POSITION.x, RESET_POSITION.y);
         this.IS_SELF = IS_SELF;
         if (!Player.animationTimer.isRunning())
             animationTimer.start();
@@ -52,6 +53,7 @@ public class Player implements DrawingObject {
         position.y = y;
     }
 
+    // assets: https://0x72.itch.io/dungeontileset-ii
     public void loadAssets(GameCanvas canvas) {
         try {
             if ((canvas.CLIENT_ID == 0 && canvas.CANVAS_ID == 0 && IS_SELF)

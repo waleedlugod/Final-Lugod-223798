@@ -74,6 +74,7 @@ public class Bullet implements DrawingObject {
         return new Vector2(velocity.x, velocity.y);
     }
 
+    // assets https://bdragon1727.itch.io/fire-pixel-bullet-16x16
     public void loadAssets(GameCanvas canvas) {
         try {
             if ((canvas.CLIENT_ID == 0 && owner.IS_SELF)

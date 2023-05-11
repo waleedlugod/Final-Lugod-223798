@@ -19,6 +19,7 @@ public class GameCanvas extends JComponent {
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
+        addBackground();
         addPlayers();
         addBullets();
 
@@ -26,13 +27,23 @@ public class GameCanvas extends JComponent {
             playerStats = new PlayerStats(players);
             objectsToDraw.add(playerStats);
         }
+    }
 
-        objectsToDraw.add(new Border());
+    private void addBackground() {
+        Background bg = new Background();
+        bg.loadAssets(this);
+        objectsToDraw.add(bg);
     }
 
     private void addPlayers() {
-        players[0] = new Player(new Vector2(CLIENT_ID == 0 ? 100 : WIDTH - 100, HEIGHT / 2), true);
-        players[1] = new Player(new Vector2(CLIENT_ID == 0 ? WIDTH - 100 : 100, HEIGHT / 2), false);
+        players[0] = new Player(new Vector2(CLIENT_ID == 0
+                ? 100
+                : WIDTH - 100, (HEIGHT / 2) - Player.SIZE.y / 2),
+                true);
+        players[1] = new Player(new Vector2(CLIENT_ID == 0
+                ? WIDTH - 100
+                : 100, (HEIGHT / 2) - Player.SIZE.y / 2),
+                false);
         players[0].loadAssets(this);
         players[1].loadAssets(this);
         objectsToDraw.add(players[0]);
