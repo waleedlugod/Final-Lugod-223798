@@ -25,6 +25,17 @@ public class GameCanvas extends JComponent {
         objectsToDraw.add(new PlayerStats(players[CANVAS_ID]));
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHints(rh);
+
+        for (DrawingObject object : objectsToDraw) {
+            object.draw(g2d);
+        }
+    }
+
     private void addBackground() {
         Background bg = new Background();
         bg.loadAssets(this);
@@ -70,17 +81,6 @@ public class GameCanvas extends JComponent {
                 bullets[i][j].setPosition(bulletPosition.x, bulletPosition.y);
                 bullets[i][j].setVelocity(bulletVelocity.x, bulletVelocity.y);
             }
-        }
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHints(rh);
-
-        for (DrawingObject object : objectsToDraw) {
-            object.draw(g2d);
         }
     }
 }

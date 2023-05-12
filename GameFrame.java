@@ -1,4 +1,6 @@
 import javax.swing.*;
+
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -25,6 +27,10 @@ public class GameFrame extends JFrame {
             public void actionPerformed(ActionEvent ae) {
                 selfCanvas.repaint();
                 enemyCanvas.repaint();
+                if (selfCanvas.players[0].health <= 0)
+                    setEnd(CLIENT_ID == 0 ? 1 : 0);
+                else if (selfCanvas.players[1].health <= 0)
+                    setEnd(CLIENT_ID);
             }
         });
         timer.start();
@@ -37,8 +43,13 @@ public class GameFrame extends JFrame {
         pack();
     }
 
-    public void setSelfCanvas(GameCanvas gameCanvas) {
-        this.selfCanvas = gameCanvas;
+    public void setEnd(int winner) {
+        remove(selfCanvas);
+        remove(enemyCanvas);
+        setLayout(new BorderLayout());
+        EndCanvas end = new EndCanvas(winner);
+        add(end);
+        revalidate();
     }
 
     private void addKeyListeners(JPanel contentPane) {

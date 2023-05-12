@@ -2,7 +2,6 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
 import java.io.*;
-import javax.swing.*;
 import javax.imageio.*;
 
 public class PlayerStats implements DrawingObject {

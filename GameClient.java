@@ -1,4 +1,5 @@
 import java.net.*;
+import java.awt.Frame;
 import java.io.*;
 
 public class GameClient {
@@ -137,12 +138,10 @@ public class GameClient {
                     writeSelfBulletsData();
                     writeOtherHealth();
                     outputStream.flush();
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    Thread.sleep(10);
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
