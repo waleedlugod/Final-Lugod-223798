@@ -1,5 +1,4 @@
 import java.net.*;
-import java.awt.Frame;
 import java.io.*;
 
 public class GameClient {

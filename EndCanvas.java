@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.awt.event.HierarchyBoundsAdapter;
 import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import javax.swing.*;
